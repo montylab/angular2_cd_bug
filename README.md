@@ -1,10 +1,7 @@
-# Asyncronius update of variable didn't render new value
+# Variable didn't render new value after update via asynchronous action
 
-to test: 
-1) npm install
-2) ng serve
-3) go to sign in page
-4) open console and try to sign in using google: you'll see correct updated value in the console, but there is no UI update.
+##to test: 
+open console and try to sign in using google: you'll see correct updated value in the console, but there is no UI update.
 
 ####header.component.html
 ```
@@ -23,7 +20,7 @@ should show the username and userpic, if **isAuth** is true
 ```
 export class HeaderComponent implements OnInit {
 	isAuth = false;
-	username: string = 'micky';
+	username: string;
 
 	constructor(private authService: AuthService) {}
 
@@ -31,18 +28,18 @@ export class HeaderComponent implements OnInit {
 		this.authService.onAuthStateChange.subscribe((isAuth) => {
 			this.username = this.authService.getUsername();
 			this.isAuth = isAuth;
-			console.log('fires subject', isAuth);
-			console.log(this);
+			console.log('fires subject - ', 'isAuth: ' + isAuth, 'name: '+ this.username);
+			console.log('context: ', this);
 		});
 
 		this.authService.emitter.subscribe((isAuth) => {
 			this.username = this.authService.getUsername();
 			this.isAuth = isAuth;
-			console.log('fires emit', isAuth);
-			console.log(this);
+			console.log('fires emitter - ', 'isAuth: ' + isAuth, 'name: '+ this.username);
+			console.log('context: ', this);
 		});
 	}
-} 
+}
 ```
-I used two ways to set **isAuth** (rx/Subject and EventEmitter), both functions were called (console.log as a proof),
-but header UI isn't updating.
+I used two ways to set **isAuth** (Rx/Subject and EventEmitter), both functions were called (console.log as a proof),
+but header component UI isn't updating.
