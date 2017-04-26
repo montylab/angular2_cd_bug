@@ -1,0 +1,16 @@
+<nav class="navbar navbar-default">
+    <div class="col-xs-10 col-md-8 col-lg-6 col-xs-offset-1 col-md-offset-2 col-lg-offset-3 headWrap">
+        <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" routerLink="/">UNO!</a></li>
+            <li routerLinkActive="active"><a class="btn" routerLink="/rooms">Rooms</a></li>
+            <li routerLinkActive="active"><a class="btn" routerLink="/settings">Settings</a></li>
+            <li routerLinkActive="active"><a class="btn" routerLink="/signin">Sign in</a></li>
+            <li *ngIf="isAuth" class="user">
+                    {{username}}
+                    <img [src]="authService.getUserPhotoUrl()" class="userpic" alt="user photo">
+            </li>
+            <!--{{username}}-->
+            <!--{{authService.getUserPhotoUrl()}}-->
+        </ul>
+    </div>
+</nav>

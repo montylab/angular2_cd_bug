@@ -1,0 +1,36 @@
+<div class="row header">
+    <div class="col-xs-8">
+        <h1>Room: {{ room.name }}</h1>
+    </div>
+    <div class="col-xs-4 text-right">
+        <a class="btn btn-success" routerLink="add">Add round</a>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sx-12">
+        <h2>Games:</h2>
+        <table class="table table-condensed">
+            <tr>
+                <th>#</th>
+                <th
+                    class="player"
+                    *ngFor="let player of room.players">
+                    {{ player }}
+                    <span class="total">
+                        {{ room.getPlayerScore(player) }}
+                    </span>
+                </th>
+            </tr>
+            <tr *ngFor="let game of room.games">
+                <td>{{game.id}}</td>
+                <td
+                    class="score"
+                    *ngFor="let player of room.players">
+                    {{ game.scores[player] }}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

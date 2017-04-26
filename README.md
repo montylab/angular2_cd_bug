@@ -1,28 +1,48 @@
-# Uno
+# Asyncronius update of variable didn't render new value
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+to test: 
+1) npm install
+2) ng serve
+3) go to sign in page
+4) open console and try to sign in using google: you'll see correct updated value in the console, but there is no UI update.
 
-## Development server
+####header.component.html
+```
+<li *ngIf="isAuth" class="user">
+                    
+{{username}}
+                    
+<img [src]="authService.getUserPhotoUrl()" class="userpic" alt="user photo">
+            
+</li>
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+should show the username and userpic, if **isAuth** is true 
 
-## Code scaffolding
+####header.component.ts
+```
+export class HeaderComponent implements OnInit {
+	isAuth = false;
+	username: string = 'micky';
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
+	constructor(private authService: AuthService) {}
 
-## Build
+	ngOnInit() {
+		this.authService.onAuthStateChange.subscribe((isAuth) => {
+			this.username = this.authService.getUsername();
+			this.isAuth = isAuth;
+			console.log('fires subject', isAuth);
+			console.log(this);
+		});
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+		this.authService.emitter.subscribe((isAuth) => {
+			this.username = this.authService.getUsername();
+			this.isAuth = isAuth;
+			console.log('fires emit', isAuth);
+			console.log(this);
+		});
+	}
+} 
+```
+I used two ways to set **isAuth** (rx/Subject and EventEmitter), both functions were called (console.log as a proof),
+but header UI isn't updating.
